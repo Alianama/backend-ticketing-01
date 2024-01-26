@@ -1,23 +1,32 @@
 const connection = require("../../connection");
+const CryptoJS = require("crypto-js");
+const keyPassDecrypt = "2k29@tynk!";
+
+function generateID(prefix) {
+  const randomNumber = Math.floor(Math.random() * 1000); // You can adjust the range based on your needs
+  return `${prefix}_${Date.now()}_${randomNumber}`;
+}
 
 function postdatahandler(req, res) {
-  // Membuat koneksi ke database
-
   // Mengambil data dari body request
   const { id, name, kerusakan, date_update, complete } = req.body;
 
-  // Membuka koneksi ke database
+  // Encrypting kerusakan field using AES encryption
+  const AesKerusakan = CryptoJS.AES.encrypt(
+    kerusakan,
+    keyPassDecrypt
+  ).toString();
 
-  // Query untuk menambahkan data ke tabel 'ticket'
+  // Query untuk menambahkan data ke tabel 'ticket' dengan ID baru
   const query = `INSERT INTO ticket (id, name, kerusakan, date_update, complete) VALUES (?, ?, ?, ?, ?)`;
+
+  const idNew = generateID("Ticket");
 
   // Menjalankan query dengan parameter yang disediakan
   connection.query(
     query,
-    [id, name, kerusakan, date_update, complete],
+    [id, name, AesKerusakan, date_update, complete],
     function (error, results, fields) {
-      // Menutup koneksi setelah query selesai
-
       if (error) {
         res.status(500).send(error.message);
       } else {
