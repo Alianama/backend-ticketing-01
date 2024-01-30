@@ -1,6 +1,7 @@
 const connection = require("../../connection");
 const CryptoJS = require("crypto-js");
-const keyPassDecrypt = "2k29@tynk!";
+require("dotenv").config();
+const paskey = process.env.PASSKEY;
 
 function getdataHandler(req, res, next) {
   // Query ke database untuk mendapatkan semua data dari tabel
@@ -14,7 +15,7 @@ function getdataHandler(req, res, next) {
       const decryptedResults = results.map((result) => {
         const decryptedKerusakan = CryptoJS.AES.decrypt(
           result.kerusakan,
-          keyPassDecrypt
+          paskey
         ).toString(CryptoJS.enc.Utf8);
         return { ...result, kerusakan: decryptedKerusakan };
       });

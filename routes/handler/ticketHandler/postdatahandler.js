@@ -1,6 +1,7 @@
 const connection = require("../../connection");
 const CryptoJS = require("crypto-js");
-const keyPassDecrypt = "2k29@tynk!";
+require("dotenv").config();
+const paskey = process.env.PASSKEY;
 
 function generateID(prefix) {
   const randomNumber = Math.floor(Math.random() * 1000); // You can adjust the range based on your needs
@@ -12,10 +13,7 @@ function postdatahandler(req, res) {
   const { id, name, kerusakan, date_update, complete } = req.body;
 
   // Encrypting kerusakan field using AES encryption
-  const AesKerusakan = CryptoJS.AES.encrypt(
-    kerusakan,
-    keyPassDecrypt
-  ).toString();
+  const AesKerusakan = CryptoJS.AES.encrypt(kerusakan, paskey).toString();
 
   // Query untuk menambahkan data ke tabel 'ticket' dengan ID baru
   const query = `INSERT INTO ticket (id, name, kerusakan, date_update, complete) VALUES (?, ?, ?, ?, ?)`;
