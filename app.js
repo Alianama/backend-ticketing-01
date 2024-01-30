@@ -8,6 +8,7 @@ var dbRouter = require("./routes/router");
 const connection = require("./routes/connection");
 const loginHandler = require("./routes/handler/usersHandler/loginHandler");
 const checkSessionHandler = require("./routes/handler/usersHandler/checkSessionHandler");
+const registerHandler = require("./routes/handler/usersHandler/registerHandler");
 
 connection.connect();
 
@@ -21,7 +22,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use(dbRouter);
-app.use("/login", loginHandler);
+app.use("/", loginHandler);
 app.use("/session", checkSessionHandler);
+app.use("/", registerHandler);
 
 module.exports = app;
